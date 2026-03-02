@@ -240,7 +240,7 @@ export default function AdminPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-display text-2xl font-bold text-white">
-            🌸 Panel Admin
+            Panel Admin
           </h1>
           <p className="text-white/50 text-sm">
             Makallé - Sorteos Día de la Mujer
