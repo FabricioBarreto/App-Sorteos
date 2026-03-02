@@ -491,9 +491,17 @@ export default function AdminPage() {
       {/* TAB: Historial */}
       {tab === "historial" && (
         <div className="glass rounded-2xl p-4 md:p-6">
-          <h2 className="font-display text-lg font-semibold text-white mb-4">
-            Historial de Sorteos
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-lg font-semibold text-white">
+              Historial de Sorteos
+            </h2>
+            <button
+              onClick={fetchHistory}
+              className="text-sm text-pink-400 hover:text-pink-300"
+            >
+              🔄 Actualizar
+            </button>
+          </div>
 
           {raffles.length === 0 ? (
             <p className="text-white/50 text-center py-8">
