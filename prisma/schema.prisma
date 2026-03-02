@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Participant {
+  id        String   @id @default(cuid())
+  name      String
+  dni       String   @unique
+  number    Int      @unique @default(autoincrement())
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([dni])
+  @@index([number])
+}
+
+model Raffle {
+  id           String   @id @default(cuid())
+  winnerNumber Int
+  winnerName   String
+  winnerDni    String
+  prize        String   @default("Premio")
+  claimed      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model RaffleStatus {
+  id        String   @id @default("current")
+  state     String   @default("idle")
+  winnerNumber Int?
+  updatedAt DateTime @updatedAt
+}
