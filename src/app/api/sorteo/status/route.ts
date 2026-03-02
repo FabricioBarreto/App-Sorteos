@@ -8,34 +8,44 @@ export async function GET() {
     });
 
     if (!status) {
-      return NextResponse.json({ state: "idle", winnerNumber: null });
+      return NextResponse.json({
+        state: "idle",
+        winnerNumber: null,
+        winnerName: null,
+      });
     }
 
     return NextResponse.json({
       state: status.state,
       winnerNumber: status.winnerNumber,
+      winnerName: status.winnerName,
     });
   } catch (error) {
     console.error("Error obteniendo estado:", error);
-    return NextResponse.json({ state: "idle", winnerNumber: null });
+    return NextResponse.json({
+      state: "idle",
+      winnerNumber: null,
+      winnerName: null,
+    });
   }
 }
 
-// Reset del estado (llamado desde admin después de mostrar ganador)
 export async function POST() {
   try {
     await prisma.raffleStatus.upsert({
       where: { id: "current" },
-      update: { state: "idle", winnerNumber: null },
-      create: { id: "current", state: "idle", winnerNumber: null },
+      update: { state: "idle", winnerNumber: null, winnerName: null },
+      create: {
+        id: "current",
+        state: "idle",
+        winnerNumber: null,
+        winnerName: null,
+      },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error reseteando estado:", error);
-    return NextResponse.json(
-      { error: "Error interno." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Error interno." }, { status: 500 });
   }
 }

@@ -10,8 +10,9 @@ datasource db {
 
 model Participant {
   id        String   @id @default(cuid())
-  name      String
+  name      String   @default("Participante")
   dni       String   @unique
+  phone     String?
   number    Int      @unique @default(autoincrement())
   ip        String?
   createdAt DateTime @default(now())
@@ -31,8 +32,9 @@ model Raffle {
 }
 
 model RaffleStatus {
-  id        String   @id @default("current")
-  state     String   @default("idle")
+  id           String   @id @default("current")
+  state        String   @default("idle")
   winnerNumber Int?
-  updatedAt DateTime @updatedAt
+  winnerName   String?
+  updatedAt    DateTime @updatedAt
 }
