@@ -210,7 +210,6 @@ export default function SorteoPage() {
       <div className="relative z-10 text-center">
         {state === "waiting" && (
           <div className="animate-pulse-slow">
-            <div className="text-8xl mb-8">🎰</div>
             <h2 className="font-display text-5xl md:text-7xl font-bold text-white/80">
               Próximo Sorteo
             </h2>
