@@ -308,13 +308,6 @@ export default function SorteoPage() {
             >
               Para reclamar tu premio, acercate con tu DNI
             </p>
-
-            <button
-              onClick={resetSorteo}
-              className="mt-12 px-8 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-all text-sm"
-            >
-              Preparar siguiente sorteo
-            </button>
           </div>
         )}
       </div>

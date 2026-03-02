@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export default function RegistroPage() {
   const [form, setForm] = useState({ name: "", dni: "" });
@@ -47,6 +47,91 @@ export default function RegistroPage() {
     setResult(null);
     setError("");
   };
+
+  const downloadComprobante = useCallback(() => {
+    if (!result) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 600;
+    canvas.height = 400;
+    const ctx = canvas.getContext("2d")!;
+
+    // Fondo degradado
+    const gradient = ctx.createLinearGradient(0, 0, 600, 400);
+    gradient.addColorStop(0, "#1a1a2e");
+    gradient.addColorStop(0.5, "#16213e");
+    gradient.addColorStop(1, "#0f3460");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 600, 400);
+
+    // Borde decorativo
+    ctx.strokeStyle = "#e91e63";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(15, 15, 570, 370, 20);
+    ctx.stroke();
+
+    // Línea decorativa interna
+    ctx.strokeStyle = "rgba(233, 30, 99, 0.3)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(25, 25, 550, 350, 16);
+    ctx.stroke();
+
+    // Título
+    ctx.fillStyle = "#f48fb1";
+    ctx.font = "bold 18px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("🌸 Makallé - Sorteos Día de la Mujer 🌸", 300, 65);
+
+    // Línea separadora
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(100, 85);
+    ctx.lineTo(500, 85);
+    ctx.stroke();
+
+    // Texto "Tu número es"
+    ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+    ctx.font = "16px sans-serif";
+    ctx.fillText("Tu número es", 300, 120);
+
+    // Número grande
+    ctx.font = "bold 120px sans-serif";
+    const numGradient = ctx.createLinearGradient(200, 130, 400, 250);
+    numGradient.addColorStop(0, "#ffd54f");
+    numGradient.addColorStop(1, "#ffb300");
+    ctx.fillStyle = numGradient;
+    ctx.fillText(`${result.number}`, 300, 240);
+
+    // Nombre si existe
+    if (result.name && result.name !== "Participante") {
+      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+      ctx.font = "bold 20px sans-serif";
+      ctx.fillText(result.name, 300, 285);
+    }
+
+    // DNI
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.font = "14px monospace";
+    const dniDisplay =
+      form.dni || result.name === "Participante" ? form.dni : "";
+    if (dniDisplay) {
+      ctx.fillText(`DNI: ${dniDisplay}`, 300, 320);
+    }
+
+    // Mensaje inferior
+    ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.font = "12px sans-serif";
+    ctx.fillText("Presentá tu DNI para reclamar tu premio", 300, 360);
+
+    // Descargar
+    const link = document.createElement("a");
+    link.download = `sorteo-makalle-${result.number}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }, [result, form.dni]);
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
@@ -157,7 +242,7 @@ export default function RegistroPage() {
                   Registrando...
                 </span>
               ) : (
-                "Participar"
+                "Participar del Sorteo 🎉"
               )}
             </button>
 
@@ -188,8 +273,15 @@ export default function RegistroPage() {
               </div>
             </div>
 
-            <p className="text-sm text-white/60 mb-6">
-              📸 ¡Sacá una captura de pantalla como comprobante!
+            <button
+              onClick={downloadComprobante}
+              className="btn-accent w-full mb-4 flex items-center justify-center gap-2"
+            >
+              📥 Descargar comprobante
+            </button>
+
+            <p className="text-xs text-white/40 mb-6">
+              Presentá tu DNI para reclamar tu premio
             </p>
 
             <button
