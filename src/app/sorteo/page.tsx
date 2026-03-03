@@ -92,28 +92,26 @@ export default function SorteoPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
 
-const checkStatus = useCallback(async () => {
-  try {
-    const res = await fetch("/api/sorteo/status");
-    const data = await res.json();
+  const checkStatus = useCallback(async () => {
+    try {
+      const res = await fetch("/api/sorteo/status");
+      const data = await res.json();
 
-    if (
-      data.state === "countdown" &&
-      data.winnerNumber &&
-      state === "waiting"
-    ) {
-      setWinnerNumber(data.winnerNumber);
-      setWinnerName(data.winnerName || null);
-      setState("countdown");
-      setShowName(false);
-      setCountdown(5);
+      if (
+        data.state === "countdown" &&
+        data.winnerNumber &&
+        state === "waiting"
+      ) {
+        setWinnerNumber(data.winnerNumber);
+        setWinnerName(data.winnerName || null);
+        setState("countdown");
 
-      fetch("/api/sorteo/status", { method: "POST" });
+        fetch("/api/sorteo/status", { method: "POST" });
+      }
+    } catch {
+      // Silenciar errores
     }
-  } catch {
-    // Silenciar errores
-  }
-}, [state]);
+  }, [state]);
 
   useEffect(() => {
     pollingRef.current = setInterval(checkStatus, 2000);
@@ -310,6 +308,13 @@ const checkStatus = useCallback(async () => {
             >
               Para reclamar tu premio, acercate con tu DNI
             </p>
+
+            <button
+              onClick={resetSorteo}
+              className="mt-12 px-8 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-all text-sm"
+            >
+              Preparar siguiente sorteo
+            </button>
           </div>
         )}
       </div>
