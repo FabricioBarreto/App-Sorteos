@@ -92,26 +92,28 @@ export default function SorteoPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
 
-  const checkStatus = useCallback(async () => {
-    try {
-      const res = await fetch("/api/sorteo/status");
-      const data = await res.json();
+const checkStatus = useCallback(async () => {
+  try {
+    const res = await fetch("/api/sorteo/status");
+    const data = await res.json();
 
-      if (
-        data.state === "countdown" &&
-        data.winnerNumber &&
-        state === "waiting"
-      ) {
-        setWinnerNumber(data.winnerNumber);
-        setWinnerName(data.winnerName || null);
-        setState("countdown");
+    if (
+      data.state === "countdown" &&
+      data.winnerNumber &&
+      state === "waiting"
+    ) {
+      setWinnerNumber(data.winnerNumber);
+      setWinnerName(data.winnerName || null);
+      setState("countdown");
+      setShowName(false);
+      setCountdown(5);
 
-        fetch("/api/sorteo/status", { method: "POST" });
-      }
-    } catch {
-      // Silenciar errores
+      fetch("/api/sorteo/status", { method: "POST" });
     }
-  }, [state]);
+  } catch {
+    // Silenciar errores
+  }
+}, [state]);
 
   useEffect(() => {
     pollingRef.current = setInterval(checkStatus, 2000);
