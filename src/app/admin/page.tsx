@@ -343,7 +343,7 @@ export default function AdminPage() {
                     <th className="pb-3 pr-4">N°</th>
                     <th className="pb-3 pr-4">Nombre</th>
                     <th className="pb-3 pr-4">DNI</th>
-                    <th className="pb-3 pr-4"></th>
+                    <th className="pb-3 pr-4">Telefono</th>
                     <th className="pb-3">Hora</th>
                   </tr>
                 </thead>
@@ -364,6 +364,9 @@ export default function AdminPage() {
                       </td>
                       <td className="py-3 pr-4 text-white/60 font-mono text-xs">
                         {p.phone}
+                      </td>
+                      <td className="py-3 pr-4 text-white/50 font-mono text-xs">
+                        {p.phone || "-"}
                       </td>
                       <td className="py-3 text-white/40 text-xs">
                         {new Date(p.createdAt).toLocaleTimeString("es-AR", {

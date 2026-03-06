@@ -55,10 +55,14 @@ export async function POST(request: Request) {
     }
 
     const cleanName = name ? sanitizeName(name) : "Participante";
+    const cleanPhone = body.phone
+      ? body.phone.replace(/\D/g, "").slice(0, 13)
+      : null;
     const participant = await prisma.participant.create({
       data: {
         name: cleanName,
         dni: dniResult.cleaned,
+        phone: cleanPhone,
         ip,
       },
     });

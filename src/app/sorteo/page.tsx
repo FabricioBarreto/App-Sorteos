@@ -100,8 +100,11 @@ export default function SorteoPage() {
       if (
         data.state === "countdown" &&
         data.winnerNumber &&
-        state === "waiting"
+        (state === "waiting" || state === "winner")
       ) {
+        setShowName(false);
+        setCountdown(5);
+        setRollingNumber(0);
         setWinnerNumber(data.winnerNumber);
         setWinnerName(data.winnerName || null);
         setState("countdown");
@@ -179,7 +182,7 @@ export default function SorteoPage() {
 
   const resetSorteo = () => {
     setState("waiting");
-    setCountdown(3);
+    setCountdown(5);
     setWinnerNumber(null);
     setWinnerName(null);
     setRollingNumber(0);
@@ -187,135 +190,144 @@ export default function SorteoPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#0a0a1a] via-[#1a1a2e] to-[#0a0a1a]">
+    <main className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#0a0a1a] via-[#1a1a2e] to-[#0a0a1a]">
       <canvas
         ref={canvasRef}
         className="fixed inset-0 pointer-events-none z-50"
       />
 
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute w-96 h-96 rounded-full bg-pink-600/10 blur-3xl -top-48 -left-48 animate-pulse-slow" />
-        <div
-          className="absolute w-96 h-96 rounded-full bg-yellow-500/10 blur-3xl -bottom-48 -right-48 animate-pulse-slow"
-          style={{ animationDelay: "1.5s" }}
-        />
-      </div>
-
-      <div className="absolute top-8 text-center z-10">
+      {/* Header */}
+      <div className="text-center pt-6 pb-2 shrink-0">
         <h1 className="font-display text-2xl font-bold text-white/60">
           🌸 Makallé - Día de la Mujer
         </h1>
       </div>
 
-      <div className="relative z-10 text-center">
-        {state === "waiting" && (
-          <div className="animate-pulse-slow">
-            <h2 className="font-display text-5xl md:text-7xl font-bold text-white/80">
-              Próximo Sorteo
-            </h2>
-            <p className="text-2xl text-white/40 mt-4 font-display">
-              Esperando...
-            </p>
-          </div>
-        )}
-
-        {state === "countdown" && (
-          <div key={countdown} className="animate-countdown">
-            <div
-              className="font-display text-[15rem] md:text-[20rem] font-black leading-none"
-              style={{
-                background:
-                  countdown === 5
-                    ? "linear-gradient(135deg, #9c27b0, #7b1fa2)"
-                    : countdown === 4
-                      ? "linear-gradient(135deg, #e91e63, #f44336)"
-                      : countdown === 3
-                        ? "linear-gradient(135deg, #ff9800, #ffc107)"
-                        : countdown === 2
-                          ? "linear-gradient(135deg, #2196f3, #03a9f4)"
-                          : "linear-gradient(135deg, #4caf50, #8bc34a)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                textShadow: "none",
-                filter: "drop-shadow(0 0 60px rgba(233, 30, 99, 0.5))",
-              }}
-            >
-              {countdown}
+      {/* Contenido principal - ocupa todo el espacio disponible */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          {state === "waiting" && (
+            <div className="animate-pulse-slow">
+              <h2 className="font-display text-5xl md:text-7xl font-bold text-white/80">
+                Próximo Sorteo
+              </h2>
+              <p className="text-2xl text-white/40 mt-4 font-display">
+                Esperando...
+              </p>
             </div>
-          </div>
-        )}
+          )}
 
-        {state === "reveal" && (
-          <div>
-            <p className="text-2xl text-white/60 font-display mb-4">
-              Y el número ganador es...
-            </p>
-            <div
-              className="font-display text-[12rem] md:text-[16rem] font-black text-white/90 leading-none transition-all duration-75"
-              style={{ filter: "blur(2px)" }}
-            >
-              {rollingNumber}
-            </div>
-          </div>
-        )}
-
-        {state === "winner" && (
-          <div>
-            <p
-              className="text-3xl text-yellow-400 font-display mb-6"
-              style={{
-                animation: "fadeIn 0.5s ease-out forwards",
-              }}
-            >
-              🎊 ¡NÚMERO GANADOR! 🎊
-            </p>
-
-            <div
-              className="font-display text-[12rem] md:text-[18rem] font-black leading-none"
-              style={{
-                background:
-                  "linear-gradient(135deg, #ffd54f, #ffb300, #ff9800)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0 0 80px rgba(255, 213, 79, 0.6))",
-                animation: "subtleZoom 4s ease-in-out infinite",
-              }}
-            >
-              {winnerNumber}
-            </div>
-
-            {showName && winnerName && winnerName !== "Participante" && (
-              <div style={{ animation: "slideUpFade 0.8s ease-out forwards" }}>
-                <p className="text-xl text-white/40 mt-6 font-display">
-                  Felicitaciones a
-                </p>
-                <p
-                  className="text-4xl md:text-5xl text-white font-display font-bold mt-2"
-                  style={{
-                    textShadow: "0 0 30px rgba(255, 255, 255, 0.3)",
-                  }}
-                >
-                  {winnerName}
-                </p>
+          {state === "countdown" && (
+            <div key={countdown} className="animate-countdown">
+              <div
+                className="font-display text-[15rem] md:text-[20rem] font-black leading-none"
+                style={{
+                  background:
+                    countdown === 5
+                      ? "linear-gradient(135deg, #9c27b0, #7b1fa2)"
+                      : countdown === 4
+                        ? "linear-gradient(135deg, #e91e63, #f44336)"
+                        : countdown === 3
+                          ? "linear-gradient(135deg, #ff9800, #ffc107)"
+                          : countdown === 2
+                            ? "linear-gradient(135deg, #2196f3, #03a9f4)"
+                            : "linear-gradient(135deg, #4caf50, #8bc34a)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  textShadow: "none",
+                  filter: "drop-shadow(0 0 60px rgba(233, 30, 99, 0.5))",
+                }}
+              >
+                {countdown}
               </div>
-            )}
+            </div>
+          )}
 
-            <p
-              className="text-2xl text-white/60 mt-8 font-display"
-              style={{
-                animation: "fadeIn 1s ease-out 1s both",
-              }}
-            >
-              Para reclamar tu premio, acercate con tu DNI
-            </p>
+          {state === "reveal" && (
+            <div>
+              <p className="text-2xl text-white/60 font-display mb-4">
+                Y el número ganador es...
+              </p>
+              <div
+                className="font-display text-[12rem] md:text-[16rem] font-black text-white/90 leading-none transition-all duration-75"
+                style={{ filter: "blur(2px)" }}
+              >
+                {rollingNumber}
+              </div>
+            </div>
+          )}
 
-            <button
-              onClick={resetSorteo}
-              className="mt-12 px-8 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-all text-sm"
-            >
-              Preparar siguiente sorteo
-            </button>
-          </div>
+          {state === "winner" && (
+            <div>
+              <p
+                className="text-3xl text-yellow-400 font-display mb-4"
+                style={{
+                  animation: "fadeIn 0.5s ease-out forwards",
+                }}
+              >
+                🎊 ¡NÚMERO GANADOR! 🎊
+              </p>
+
+              <div
+                className="font-display text-[10rem] md:text-[14rem] font-black leading-none"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #ffd54f, #ffb300, #ff9800)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  filter: "drop-shadow(0 0 80px rgba(255, 213, 79, 0.6))",
+                  animation: "subtleZoom 4s ease-in-out infinite",
+                }}
+              >
+                {winnerNumber}
+              </div>
+
+              {showName && winnerName && winnerName !== "Participante" && (
+                <div
+                  style={{ animation: "slideUpFade 0.8s ease-out forwards" }}
+                >
+                  <p className="text-lg text-white/40 mt-4 font-display">
+                    Felicitaciones a
+                  </p>
+                  <p
+                    className="text-3xl md:text-4xl text-white font-display font-bold mt-1"
+                    style={{
+                      textShadow: "0 0 30px rgba(255, 255, 255, 0.3)",
+                    }}
+                  >
+                    {winnerName}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Footer - siempre abajo, nunca se superpone */}
+      <div className="shrink-0 text-center pb-4">
+        {state === "winner" && (
+          <p
+            className="text-lg text-white/50 font-display mb-3"
+            style={{
+              animation: "fadeIn 1s ease-out 1s both",
+            }}
+          >
+            Para reclamar tu premio, acercate con tu DNI
+          </p>
+        )}
+        <img
+          src="/logo-municipio.png"
+          alt="Municipio Makallé"
+          className="h-35 md:h-40 opacity-50 mx-auto"
+        />
+        {state === "winner" && (
+          <button
+            onClick={resetSorteo}
+            className="fixed bottom-4 right-4 px-4 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-white/30 hover:text-white/60 transition-all text-xs z-20"
+          >
+            Preparar siguiente sorteo
+          </button>
         )}
       </div>
 

@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 
 export default function RegistroPage() {
-  const [form, setForm] = useState({ name: "", dni: "" });
+  const [form, setForm] = useState({ name: "", dni: "", phone: "" });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -43,7 +43,7 @@ export default function RegistroPage() {
   };
 
   const resetForm = () => {
-    setForm({ name: "", dni: "" });
+    setForm({ name: "", dni: "", phone: "" });
     setResult(null);
     setError("");
   };
@@ -208,6 +208,28 @@ export default function RegistroPage() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 maxLength={100}
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-white/70 mb-1.5 ml-1">
+                Telefono <span className="text-white/30">(opcional)</span>
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                placeholder="Ej: 3624123456"
+                className="input-field"
+                value={form.phone}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    phone: e.target.value.replace(/\D/g, "").slice(0, 13),
+                  })
+                }
+              />
+              <p className="text-xs text-white/30 mt-1 ml-1">
+                Para enterarte de próximos eventos
+              </p>
             </div>
 
             {error && (
