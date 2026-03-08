@@ -7,13 +7,13 @@ import { sanitizeName, validateDni, validateName } from "@/lib/validation";
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
-    const rateCheck = checkRateLimit(ip, RATE_LIMITS.register);
-    if (!rateCheck.allowed) {
-      return NextResponse.json(
-        { error: "Demasiados intentos. Esperá un rato e intentá de nuevo." },
-        { status: 429 },
-      );
-    }
+    // const rateCheck = checkRateLimit(ip, RATE_LIMITS.register);
+    // if (!rateCheck.allowed) {
+    //   return NextResponse.json(
+    //     { error: "Demasiados intentos. Esperá un rato e intentá de nuevo." },
+    //     { status: 429 },
+    //   );
+    // }
 
     const body = await request.json();
     const { name, dni } = body;
