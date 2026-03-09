@@ -313,12 +313,36 @@ export default function AdminPage() {
             <h2 className="font-display text-lg font-semibold text-white">
               Participantes
             </h2>
-            <button
-              onClick={fetchParticipants}
-              className="text-sm text-pink-400 hover:text-pink-300"
-            >
-              🔄 Actualizar
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  const csv =
+                    "N°,Nombre,DNI,Telefono,Hora\n" +
+                    participants
+                      .map(
+                        (p) =>
+                          `${p.number},"${p.name}",${p.dni},${p.phone || ""},${new Date(p.createdAt).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`,
+                      )
+                      .join("\n");
+                  const blob = new Blob(["\uFEFF" + csv], {
+                    type: "text/csv;charset=utf-8;",
+                  });
+                  const link = document.createElement("a");
+                  link.href = URL.createObjectURL(blob);
+                  link.download = "participantes-sorteo-makalle.csv";
+                  link.click();
+                }}
+                className="text-sm text-green-400 hover:text-green-300"
+              >
+                📥 Exportar CSV
+              </button>
+              <button
+                onClick={fetchParticipants}
+                className="text-sm text-pink-400 hover:text-pink-300"
+              >
+                🔄 Actualizar
+              </button>
+            </div>
           </div>
 
           <input
@@ -361,9 +385,6 @@ export default function AdminPage() {
                       <td className="py-3 pr-4 text-white/90">{p.name}</td>
                       <td className="py-3 pr-4 text-white/60 font-mono text-xs">
                         {p.dni}
-                      </td>
-                      <td className="py-3 pr-4 text-white/60 font-mono text-xs">
-                        {p.phone}
                       </td>
                       <td className="py-3 pr-4 text-white/50 font-mono text-xs">
                         {p.phone || "-"}
